@@ -2,10 +2,10 @@ import Config
 
 # NOTE: this file contains some security keys/certs that are *not* secrets, and are only used for local development purposes.
 
-host = "hubs.local"
-cors_proxy_host = "hubs-proxy.local"
-assets_host = "hubs-assets.local"
-link_host = "hubs-link.local"
+host = "ichifan.meta-box.space"
+cors_proxy_host = "cors.ichifan.meta-box.space"
+assets_host = "assets.ichifan.meta-box.space"
+link_host = "link.ichifan.meta-box.space"
 
 # To run reticulum across a LAN for local testing, uncomment and change the line below to the LAN IP
 # host = cors_proxy_host = "192.168.1.27"
@@ -17,8 +17,8 @@ link_host = "hubs-link.local"
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :ret, RetWeb.Endpoint,
-  url: [scheme: "https", host: host, port: 4000],
-  static_url: [scheme: "https", host: host, port: 4000],
+  url: [scheme: "https", host: host, port: 443],
+  static_url: [scheme: "https", host: host, port: 443],
   https: [
     port: 4000,
     otp_app: :ret,
@@ -26,17 +26,17 @@ config :ret, RetWeb.Endpoint,
     keyfile: "#{File.cwd!()}/priv/dev-ssl.key",
     certfile: "#{File.cwd!()}/priv/dev-ssl.cert"
   ],
-  cors_proxy_url: [scheme: "https", host: cors_proxy_host, port: 4000],
-  assets_url: [scheme: "https", host: assets_host, port: 4000],
-  link_url: [scheme: "https", host: link_host, port: 4000],
-  imgproxy_url: [scheme: "http", host: host, port: 5000],
+  cors_proxy_url: [scheme: "https", host: cors_proxy_host, port: 443],
+  assets_url: [scheme: "https", host: assets_host, port: 443],
+  link_url: [scheme: "https", host: link_host, port: 443],
+  imgproxy_url: [scheme: "http", host: "imgproxy", port: 8080],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
   # This config value is for local development only.
-  secret_key_base: "txlMOtlaY5x3crvOCko4uV5PM29ul3zGo1oBGNO3cDXx+7GHLKqt0gR9qzgThxb5",
+  secret_key_base: "phxvoice0310",
   allowed_origins: "*",
-  allow_crawlers: true
+  allow_crawlers: false
 
 # ## SSL Support
 #
@@ -137,7 +137,7 @@ config :ret, Ret.Speelycaptor,
   speelycaptor_endpoint: "https://1dhaogh2hd.execute-api.us-west-1.amazonaws.com/public"
 
 config :ret, Ret.Storage,
-  host: "https://#{host}:4000",
+  host: "https://#{assets_host}:443",
   storage_path: "storage/dev",
   ttl: 60 * 60 * 24
 
@@ -170,7 +170,7 @@ config :ret, Ret.OAuthToken, oauth_token_key: ""
 config :ret, Ret.Guardian,
   issuer: "ret",
   # This config value is for local development only.
-  secret_key: "47iqPEdWcfE7xRnyaxKDLt9OGEtkQG3SycHBEMOuT2qARmoESnhc76IgCUjaQIwX",
+  secret_key: "guardvoice0310",
   ttl: {12, :weeks}
 
 config :web_push_encryption, :vapid_details,

@@ -142,13 +142,17 @@ defmodule Ret.HttpUtils do
       InetCidr.parse_address!(host)
     rescue
       _ ->
-        case DNS.resolve(host) do
-          {:ok, results} ->
-            # TODO We should probably be able to handle ipv6 here too.
-            results |> Enum.filter(&InetCidr.v4?/1) |> Enum.random()
-
+        # Try /etc/hosts first via :inet.getaddr (libc), fall back to DNS.resolve
+        case :inet.getaddr(String.to_charlist(host), :inet) do
+          {:ok, ip_tuple} ->
+            ip_tuple
           _ ->
-            nil
+            case DNS.resolve(host) do
+              {:ok, results} ->
+                results |> Enum.filter(&InetCidr.v4?/1) |> Enum.random()
+              _ ->
+                nil
+            end
         end
     end
   end

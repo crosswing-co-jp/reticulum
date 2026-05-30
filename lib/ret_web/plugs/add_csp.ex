@@ -128,13 +128,7 @@ defmodule RetWeb.Plugs.AddCSP do
       "script-src" => [
         "'self'",
         "blob:",
-        "'sha256-/S6PM16MxkmUT7zJN2lkEKFgvXR7yL4Z8PCrRrFu4Q8='",
-        "'sha256-MIpWPgYj31kCgSUFc0UwHGQrV87W6N5ozotqfxxQG0w='",
-        "'sha256-ViVvpb0oYlPAp7R8ZLxlNI6rsf7E7oz8l1SgCIXgMvM='",
-        "'sha256-buF6N8Z4p2PuaaeRUjm7mxBpPNf4XlCT9Fep83YabbM='",
-        "'sha256-foB3G7vO68Ot8wctsG3OKBQ84ADKVinlnTg9/s93Ycs='",
-        "'sha256-g0j42v3Wo/ohUAMR/t0EuObDSEkx1rZ3lv45fUaNmYs='",
-        "'sha256-hsbRcgUBASABDq7qVGVTpbnWq/ns7B+ToTctZFJXYi8='",
+        "'unsafe-inline'",
         "'unsafe-eval'",
         "https://aframe.io",
         "https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js",
@@ -159,6 +153,7 @@ defmodule RetWeb.Plugs.AddCSP do
         storage_url
       ],
       "font-src" => [
+        "data:",
         "'self'",
         "https://cdn.aframe.io",
         "https://cdn.jsdelivr.net",

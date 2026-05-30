@@ -615,7 +615,7 @@ defmodule RetWeb.PageController do
     {config, config_script}
   end
 
-  defp csp_for_script(script), do: "'sha256-#{:crypto.hash(:sha256, script) |> :base64.encode()}'"
+  defp csp_for_script(_script), do: ""
 
   defp redirect_to_hub_sid(conn, hub_sid) do
     hub = Repo.get_by(Hub, hub_sid: hub_sid)
@@ -717,7 +717,7 @@ defmodule RetWeb.PageController do
          [scheme, port, host] =
            [:scheme, :port, :host] |> Enum.map(&Keyword.get(imgproxy_url, &1)),
          %{"w" => width, "h" => height} <- qs |> URI.decode_query() do
-      thumbnail_url = "#{scheme}://#{host}:#{port}//auto/#{width}/#{height}/sm/1/#{encoded_url}"
+      thumbnail_url = "#{scheme}://#{host}:#{port}/insecure/rs:fit:#{width}:#{height}/sm:1/#{encoded_url}"
 
       opts =
         ReverseProxyPlug.init(
