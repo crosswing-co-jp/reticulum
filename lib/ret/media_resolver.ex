@@ -32,7 +32,23 @@ defmodule Ret.MediaResolver do
 
   @deviant_id_regex ~r/\"DeviantArt:\/\/deviation\/([^"]+)/
 
+  # Ichifan: VOICE 復元データの scene 内に残った旧 EKS の URL を現行ホストに rewrite。
+  # `hubs.voice-doujin.space/<sid>/<slug>` 等が大量に焼き付いているため、 ここで透過置換。
+  @legacy_host_rewrites %{
+    "hubs.voice-doujin.space" => "ichifan.meta-box.space"
+  }
+
+  defp rewrite_legacy_url(url) when is_binary(url) do
+    Enum.reduce(@legacy_host_rewrites, url, fn {from, to}, acc ->
+      acc
+      |> String.replace("https://#{from}", "https://#{to}")
+      |> String.replace("http://#{from}", "https://#{to}")
+    end)
+  end
+
   def resolve(%MediaResolverQuery{url: url} = query) when is_binary(url) do
+    url = rewrite_legacy_url(url)
+    query = Map.put(query, :url, url)
     uri = url |> URI.parse()
     root_host = get_root_host(uri.host)
     query = Map.put(query, :url, uri)
