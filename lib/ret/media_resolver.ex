@@ -477,10 +477,16 @@ defmodule Ret.MediaResolver do
       )
 
     case cached_file_result do
-      {:ok, file_uri} ->
+      {:ok, %URI{} = file_uri} ->
         meta = %{thumbnail: file_uri |> URI.to_string(), expected_content_type: content_type}
 
         {:commit, uri |> resolved(meta)}
+
+      # Hubs CE では photomnemonic が無いと CachedFile.fetch が {:ok, {:error, reason}}
+      # を返すケースがあり、 そのまま URI.to_string すると String.Chars 例外で 500。
+      # photomnemonic 不在環境では screenshot を諦めて :error にフォールバック。
+      {:ok, _non_uri} ->
+        :error
 
       {:error, _reason} ->
         :error
