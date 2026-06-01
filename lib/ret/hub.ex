@@ -104,6 +104,9 @@ defmodule Ret.Hub do
     field :user_data, :map
     field :allow_promotion, :boolean
     field :room_size, :integer
+    field :disable_scene_audio, :boolean, default: false
+    field :disable_audio_attenuation, :boolean, default: false
+    field :disable_media_frames, :boolean, default: false
 
     belongs_to :created_by_account, Ret.Account, references: :account_id
 
@@ -416,7 +419,15 @@ defmodule Ret.Hub do
 
   def add_attrs_to_changeset(changeset, attrs) do
     changeset
-    |> cast(attrs, [:name, :description, :user_data, :room_size])
+    |> cast(attrs, [
+      :name,
+      :description,
+      :user_data,
+      :room_size,
+      :disable_scene_audio,
+      :disable_audio_attenuation,
+      :disable_media_frames
+    ])
     |> validate_required([:name])
     |> validate_length(:name, max: 64)
     |> validate_length(:description, max: 64_000)
