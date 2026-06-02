@@ -161,9 +161,18 @@ config :ret, RetWeb.Plugs.AddCSP,
   media_src: asset_hosts,
   manifest_src: asset_hosts
 
-config :ret, Ret.Mailer, adapter: Swoosh.Adapters.Logger, log_full_email: true
+config :ret, Ret.Mailer,
+  adapter: Swoosh.Adapters.SMTP,
+  relay: System.get_env("SMTP_HOST") || "email-smtp.ap-northeast-1.amazonaws.com",
+  port: String.to_integer(System.get_env("SMTP_PORT") || "587"),
+  username: System.get_env("SMTP_USERNAME"),
+  password: System.get_env("SMTP_PASSWORD"),
+  ssl: false,
+  tls: :always,
+  auth: :always,
+  retries: 2
 
-config :ret, RetWeb.Email, from: "info@hubs-mail.com"
+config :ret, RetWeb.Email, from: System.get_env("MAIL_FROM") || "noreply@meta-box.space"
 
 config :ret, Ret.OAuthToken, oauth_token_key: ""
 
