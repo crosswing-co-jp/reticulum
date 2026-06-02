@@ -34,7 +34,7 @@ case config_env() do
     config :ret, Ret.PermsToken, perms_key: perms_key
 
     config :ret, Ret.PageOriginWarmer,
-      admin_page_origin: "https://#{hubs_admin_internal_hostname}:8989",
+      admin_page_origin: System.get_env("ADMIN_PAGE_ORIGIN") || "https://#{hubs_admin_internal_hostname}:8989",
       hubs_page_origin: "https://#{hubs_client_internal_hostname}",
       spoke_page_origin: "https://#{spoke_internal_hostname}:9090"
 
