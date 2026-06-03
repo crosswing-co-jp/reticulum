@@ -32,18 +32,16 @@ defmodule Ret.MediaResolver do
 
   @deviant_id_regex ~r/\"DeviantArt:\/\/deviation\/([^"]+)/
 
-  # Ichifan: VOICE 復元データの scene 内に残った旧 EKS の URL を現行ホストに rewrite。
-  # `hubs.voice-doujin.space/<sid>/<slug>` 等が大量に焼き付いているため、 ここで透過置換。
-  @legacy_host_rewrites %{
-    "hubs.voice-doujin.space" => "ichifan.meta-box.space"
-  }
-
+  # Ichifan: VOICE 復元データの scene/project に残った旧 EKS の URL を現行ホストに rewrite。
+  # `hubs.voice-doujin.space/<sid>/<slug>`(room)や `/files/<uuid>`(owned_file blob)が大量に焼き付いている。
+  # ⚠️ パス依存: `/files/` は assets ホスト経由でないと token 必須で 404/403 → 解決 500 になる
+  #    (assets ホストは Ret.Storage.host で token 無し配信)。 room URL 等は現行メインホストへ。
   defp rewrite_legacy_url(url) when is_binary(url) do
-    Enum.reduce(@legacy_host_rewrites, url, fn {from, to}, acc ->
-      acc
-      |> String.replace("https://#{from}", "https://#{to}")
-      |> String.replace("http://#{from}", "https://#{to}")
-    end)
+    url
+    |> String.replace("https://hubs.voice-doujin.space/files/", "https://assets.ichifan.meta-box.space/files/")
+    |> String.replace("http://hubs.voice-doujin.space/files/", "https://assets.ichifan.meta-box.space/files/")
+    |> String.replace("https://hubs.voice-doujin.space", "https://ichifan.meta-box.space")
+    |> String.replace("http://hubs.voice-doujin.space", "https://ichifan.meta-box.space")
   end
 
   def resolve(%MediaResolverQuery{url: url} = query) when is_binary(url) do
